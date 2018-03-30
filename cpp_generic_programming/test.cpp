@@ -7,7 +7,8 @@ int main(){
 
     assert((std::is_same<Head<list>, int>::value));
     assert((std::is_same<Tail<list>, TypeList<float,double>>::value));
-
+    assert((std::is_same<Init<list>, TypeList<int,float>>::value));
+    assert((std::is_same<Last<list>, double>::value));
 
     assert((std::is_same<PushFront<list, short>, TypeList<short,int,float,double>>::value));
     assert((std::is_same<PushFront<empty_list, short>, TypeList<short>>::value));
@@ -18,5 +19,5 @@ int main(){
     assert((std::is_same<Reverse<empty_list>, TypeList<>>::value));
     assert((std::is_same<Reverse<one_element_list>, TypeList<int>>::value));
 
-    
+
 }
