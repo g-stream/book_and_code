@@ -1,6 +1,8 @@
 #ifndef FACTORY_H_
 #define FACTORY_H_
-class Factory
-
-
+#include "product.h"
+class Factory{
+public: 
+    AbstractProduction* getProduction(int);
+};
 #endif
