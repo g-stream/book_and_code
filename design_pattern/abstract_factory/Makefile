@@ -1,13 +1,16 @@
 cxx=g++
 cflag=-g -Wall -std=c++14
-test.o:test.cpp 
-	${cxx} -c ${cflag} $<
-factory.o:factory.h
-	${cxx} -c ${cflag} $<
-product.o:product.h
-	${cxx} -c ${cflag} $<
-test:test.o product.o factory.o 
-	g++ -o $@  $<
+
+test:test.o product.o factory.o
+	${cxx} ${cflag} -o $@  $^
+test.o:%.o:%.cpp
+	${cxx} ${cflag}  -c  $<
+factory.o : %.o:%.cpp product.h
+	${cxx} ${cflag} -c  $< 
+product.o : %.o:%.cpp product.h
+	${cxx} ${cflag} -c  $< 
+
+
 .PHONY:clean
 clean:
 	rm *.o test
