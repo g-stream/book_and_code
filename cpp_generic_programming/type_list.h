@@ -82,11 +82,59 @@ struct reverse_trait<TypeList<>>{
 template<typename List>
 using Reverse = typename reverse_trait<List>::type;
 
+template<typename List, template<typename T> class Op>
+struct map_trait;
+template<typename h, typename...t,template<typename T> class op> 
+struct map_trait<TypeList<h,t...>, op>{
+    using type = PushFront<typename map_trait<TypeList<t...>, op>::type, typename op<h>::type>;
+};
+template<template<typename T> class op>
+struct map_trait<TypeList<>, op> {
+    using type = TypeList<>;
+};
+template<typename List, template<typename T> class Op>
+using Map = typename map_trait<List, Op>::type;
+
+
+template<typename List1, typename List2, template<typename T1, typename T2> class op>
+struct zip_with_trait;
+template<typename h1, typename h2,typename ...t1, typename ...t2, template<typename T1, typename T2> class op>
+struct zip_with_trait<TypeList<h1,t1...>, TypeList<h2, t2...>, op>{
+    using type = PushFront<typename zip_with_trait<TypeList<t1...>,TypeList<t2...>,op>::type, typename op<h1,h2>::type>;
+};
+template<template<typename T1, typename T2> class op>
+struct zip_with_trait<TypeList<>, TypeList<>, op>{
+    using type = TypeList<>;
+};
+template<typename List1, typename List2, template<typename T1, typename T2> class op>
+using ZipWith = typename zip_with_trait<List1, List2, op>::type;
+
+template<typename T1, typename T2> 
+struct pair{
+    using type = TypeList<T1, T2>;
+};
+
+template<typename List1, typename List2> 
+using Zip = ZipWith<List1, List2, pair>; 
+
+/*
+template<typename List, template<typename T> class Predictor> 
+constexpr bool or_trait;
+template<template<typename T> class p> 
+constexpr bool or_trait<TypeList<>,p> = false;
+template<typename h, typename...t, template<typename T> class p> 
+constexpr bool or_trait = or_trait<TypeList<t...>, p> || typename p<h>::value;
+
+
+template<typename List, template<typename T> class Predictor> 
+constexpr bool Any = = or_trait<List, Predictor>;
+
+template<typename List> 
+constexpr bool HaveIntergalType = Any<List,  std::is_integral>;
+*/
 
 /*
 
-map  A  => B
-zip  [A,B] , [B,C] => [[A,B],[B,C]
 flodleft [A, B, C] (x,y)=>V  init => (((init,A),B),C)   
 filter
 match  any all .....
