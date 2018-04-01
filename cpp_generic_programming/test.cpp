@@ -64,7 +64,12 @@ int main(){
     TypeList<TypeList<int,bool>, TypeList<float, long long int>, TypeList< double, char>>>::value));
     using list_without_intergal_type = TypeList<char>;
     ASSERT_OK("IndexOf", (IndexOf<list,int> == 0));
+    ASSERT_OK("Any1",( Any<list, std::is_integral> == true));
+    ASSERT_OK("Any2",( Any<TypeList<decltype(std::cout)>, std::is_integral> == false));
+    ASSERT_OK("Any3",( Any<empty_list, std::is_integral> == false));
+    ASSERT_OK("All1",( All<TypeList<int,long>, std::is_integral> == true));
+    ASSERT_OK("All2",( All<PushBack<list,char>, std::is_integral> == false));
+    ASSERT_OK("All3",( All<empty_list, std::is_integral> == false));
 
-  //  ASSERT_OK("Have Intergal Type", HaveIntergalType<list_without_intergal_type>);
-
+    ASSERT_OK("Exist", (Exist<list, int>));
 }
