@@ -63,6 +63,8 @@ int main(){
     ASSERT_OK("Zip",(std::is_same<Zip<list,list2>,
     TypeList<TypeList<int,bool>, TypeList<float, long long int>, TypeList< double, char>>>::value));
     using list_without_intergal_type = TypeList<char>;
+    ASSERT_OK("IndexOf", (IndexOf<list,int> == 0));
+
   //  ASSERT_OK("Have Intergal Type", HaveIntergalType<list_without_intergal_type>);
 
 }

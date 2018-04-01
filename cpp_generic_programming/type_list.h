@@ -117,6 +117,22 @@ struct pair{
 template<typename List1, typename List2> 
 using Zip = ZipWith<List1, List2, pair>; 
 
+template<typename List, typename T>
+struct index_of_trait;
+template<typename h, typename ...t, typename T>
+struct index_of_trait<TypeList<h,t...>, T>{
+    static const unsigned int value = index_of_trait<TypeList<t...>, T>::value;
+};
+template<typename T>
+struct index_of_trait<TypeList<>, T>{
+    static const unsigned int value = 0;
+};
+template<typename h, typename ...t>
+struct index_of_trait<TypeList<h,t...>, h>{
+    static const unsigned int value = 0;
+};
+template<typename List, typename T> 
+constexpr unsigned int IndexOf = index_of_trait<List, T>::value;
 /*
 template<typename List, template<typename T> class Predictor> 
 constexpr bool or_trait;
