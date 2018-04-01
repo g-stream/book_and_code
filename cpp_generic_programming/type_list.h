@@ -187,25 +187,27 @@ constexpr bool All = and_trait<List, P>::value;
 template<typename List, typename T> 
 constexpr bool Exist = (IndexOf<List, T> != List::length);
 
-
-
-/*
-template<typename List, template<typename T> class Predictor> 
-constexpr bool Any = = or_trait<List, Predictor>;
-
+template<typename List, unsigned int index> 
+struct at_trait{
+    using type = typename at_trait<Tail<List>, index-1>::type;
+};
 template<typename List> 
-constexpr bool HaveIntergalType = Any<List,  std::is_integral>;
-*/
+struct at_trait<List, 0>{
+    using type = Head<List>;
+};
+template<typename List, unsigned int index> 
+using At = typename at_trait<List, index>::type;
 
-/*
-
-flodleft [A, B, C] (x,y)=>V  init => (((init,A),B),C)   
-filter
-match  any all .....
-contact
-
-*/
-
+template<typename List, unsigned int index, typename acc> 
+struct erase_trait{
+    using type = typename erase_trait<Tail<List>, index-1, PushBack<acc, Head<List>>>::type;
+};
+template<typename List, typename acc> 
+struct erase_trait<List, 0, acc>{
+    using type = Concatenate<acc, Tail<List>>;
+};
+template<typename List, unsigned int index> 
+using EraseAt = typename erase_trait<List, index, TypeList<>>::type;
 
 
 #endif

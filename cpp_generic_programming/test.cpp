@@ -80,4 +80,9 @@ int main(){
     ASSERT_OK("All3",( All<empty_list, std::is_integral> == false));
 
     ASSERT_OK("Exist", (Exist<list, int>));
+    ASSERT_OK("Exist", (Exist<list, bool>));
+    ASSERT_OK("At", (std::is_same<int, At<list, 0>>::value));
+    ASSERT_OK("EraseAt", (std::is_same<TypeList<int, double>, EraseAt<list,1>>::value));
+
+    
 }
