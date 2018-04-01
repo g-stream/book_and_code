@@ -5,6 +5,10 @@ template<typename ... Ts>
 struct TypeList{
     static const unsigned int length = sizeof...(Ts);
 };
+template<typename T>
+constexpr unsigned int Length = T::length;
+
+
 template<typename List>
 struct head_trait;
 
@@ -116,6 +120,50 @@ struct pair{
 
 template<typename List1, typename List2> 
 using Zip = ZipWith<List1, List2, pair>; 
+
+template<typename List1, typename List2> 
+struct concatenate_trait;
+template<typename List1, typename h2, typename...t2>
+struct concatenate_trait<List1, TypeList<h2, t2...>>{
+    using type = typename concatenate_trait<PushBack<List1, h2>, TypeList<t2...>>::type;
+};
+template<typename List>
+struct concatenate_trait<List, TypeList<>>{
+    using type = List;
+};
+template<typename List1, typename List2> 
+using Concatenate = typename concatenate_trait<List1, List2>::type;
+
+template<typename List, unsigned int index> 
+struct at_trait;
+template<typename h, typename...t, unsigned int index> 
+struct at_trait<TypeList<h,t...>,index>{
+    using type = typename at_trait<TypeList<t...>, index -1>::type;
+};
+template<typename h, typename...t> 
+struct at_trait<TypeList<h,t...>, 0>{
+    using type = h;
+};
+template<typename List, unsigned int index>
+using At = typename at_trait<List, index>::type;
+
+template<typename List, typename T>
+struct index_of_trait;
+template<typename h, typename...t, typename T> 
+struct index_of_trait<TypeList<h,t...>,T>{
+     enum{value = 1 + index_of_trait<TypeList<t...>, T>::value};
+};
+template<typename h, typename...t> 
+struct index_of_trait<TypeList<h,t...>,h>{
+    enum{value = 0} ;
+};
+template<typename T>
+struct index_of_trait<TypeList<>,T>{
+     enum{value = 0} ;
+};
+
+
+
 
 /*
 template<typename List, template<typename T> class Predictor> 

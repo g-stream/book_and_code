@@ -42,6 +42,8 @@ int main(){
     using empty_list = TypeList<>;
     using one_element_list = TypeList<int>;
 
+    ASSERT_OK("Length", Length<list> == 3);
+
     ASSERT_OK("Head", (std::is_same<Head<list>, int>::value));
 
     ASSERT_OK("Tail", (std::is_same<Tail<list>, TypeList<float,double>>::value));
@@ -63,6 +65,19 @@ int main(){
     ASSERT_OK("Zip",(std::is_same<Zip<list,list2>,
     TypeList<TypeList<int,bool>, TypeList<float, long long int>, TypeList< double, char>>>::value));
     using list_without_intergal_type = TypeList<char>;
+
+    ASSERT_OK("Concatenate", (std::is_same<Concatenate<list,list2>,
+                                           TypeList<int,float,double,bool, long long int, char>>::value));
+    ASSERT_OK("Concatenate empty", (std::is_same<Concatenate<empty_list,empty_list>,
+                                           TypeList<>>::value));
+    ASSERT_OK("At", (std::is_same<At<list,1>,
+                                    float>::value));
+    std::cout << typename index_of_trait<list, int>::value;
+    
+    //std::cout << typeid(Tail<Tail<Tail<Tail<tt>>>>).name();
+    //ASSERT_OK("IndexOf", (IndexOf<list, double> == 2));
+    //ASSERT_OK("IndexOf", (IndexOf<list, short> == 3));
+
   //  ASSERT_OK("Have Intergal Type", HaveIntergalType<list_without_intergal_type>);
 
 }
