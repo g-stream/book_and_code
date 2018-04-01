@@ -70,14 +70,14 @@ int main(){
                                            TypeList<int,float,double,bool, long long int, char>>::value));
     ASSERT_OK("Concatenate empty", (std::is_same<Concatenate<empty_list,empty_list>,
                                            TypeList<>>::value));
-    ASSERT_OK("At", (std::is_same<At<list,1>,
-                                    float>::value));
-    std::cout << typename index_of_trait<list, int>::value;
-    
-    //std::cout << typeid(Tail<Tail<Tail<Tail<tt>>>>).name();
-    //ASSERT_OK("IndexOf", (IndexOf<list, double> == 2));
-    //ASSERT_OK("IndexOf", (IndexOf<list, short> == 3));
 
-  //  ASSERT_OK("Have Intergal Type", HaveIntergalType<list_without_intergal_type>);
+    ASSERT_OK("IndexOf", (IndexOf<list,int> == 0));
+    ASSERT_OK("Any1",( Any<list, std::is_integral> == true));
+    ASSERT_OK("Any2",( Any<TypeList<decltype(std::cout)>, std::is_integral> == false));
+    ASSERT_OK("Any3",( Any<empty_list, std::is_integral> == false));
+    ASSERT_OK("All1",( All<TypeList<int,long>, std::is_integral> == true));
+    ASSERT_OK("All2",( All<PushBack<list,char>, std::is_integral> == false));
+    ASSERT_OK("All3",( All<empty_list, std::is_integral> == false));
 
+    ASSERT_OK("Exist", (Exist<list, int>));
 }

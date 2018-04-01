@@ -134,46 +134,62 @@ struct concatenate_trait<List, TypeList<>>{
 template<typename List1, typename List2> 
 using Concatenate = typename concatenate_trait<List1, List2>::type;
 
-template<typename List, unsigned int index> 
-struct at_trait;
-template<typename h, typename...t, unsigned int index> 
-struct at_trait<TypeList<h,t...>,index>{
-    using type = typename at_trait<TypeList<t...>, index -1>::type;
-};
-template<typename h, typename...t> 
-struct at_trait<TypeList<h,t...>, 0>{
-    using type = h;
-};
-template<typename List, unsigned int index>
-using At = typename at_trait<List, index>::type;
-
 template<typename List, typename T>
 struct index_of_trait;
-template<typename h, typename...t, typename T> 
-struct index_of_trait<TypeList<h,t...>,T>{
-     enum{value = 1 + index_of_trait<TypeList<t...>, T>::value};
-};
-template<typename h, typename...t> 
-struct index_of_trait<TypeList<h,t...>,h>{
-    enum{value = 0} ;
+template<typename h, typename ...t, typename T>
+struct index_of_trait<TypeList<h,t...>, T>{
+    static const unsigned int value = index_of_trait<TypeList<t...>, T>::value;
 };
 template<typename T>
-struct index_of_trait<TypeList<>,T>{
-     enum{value = 0} ;
+struct index_of_trait<TypeList<>, T>{
+    static const unsigned int value = 0;
+};
+template<typename h, typename ...t>
+struct index_of_trait<TypeList<h,t...>, h>{
+    static const unsigned int value = 0;
+};
+template<typename List, typename T> 
+constexpr unsigned int IndexOf = index_of_trait<List, T>::value;
+
+
+template<typename List, template<typename T> class Predictor> 
+struct  or_trait;
+template<template<typename T> class p> 
+struct  or_trait<TypeList<>,p>{
+    static const bool value = false;   
+};
+template<typename h, typename...t, template<typename T> class p> 
+struct or_trait<TypeList<h, t...>, p> {
+    static const bool value = p<h>::value || or_trait<TypeList<t...>, p>::value;
+};
+template<typename List, template<typename T> class P> 
+constexpr bool Any = or_trait<List, P>::value;
+
+
+template<typename List, template<typename T> class Predictor> 
+struct  and_trait;
+template<typename Only, template<typename T> class p> 
+struct  and_trait<TypeList<Only>,p>{
+    static const bool value = p<Only>::value;   
+};
+template<template<typename T> class p> 
+struct  and_trait<TypeList<>,p>{
+    static const bool value = false;   
+};
+template<typename h, typename...t, template<typename T> class p> 
+struct and_trait<TypeList<h, t...>, p> {
+    static const bool value = p<h>::value & and_trait<TypeList<t...>, p>::value;
 };
 
+template<typename List, template<typename T> class P> 
+constexpr bool All = and_trait<List, P>::value;
+
+template<typename List, typename T> 
+constexpr bool Exist = (IndexOf<List, T> != List::length);
 
 
 
 /*
-template<typename List, template<typename T> class Predictor> 
-constexpr bool or_trait;
-template<template<typename T> class p> 
-constexpr bool or_trait<TypeList<>,p> = false;
-template<typename h, typename...t, template<typename T> class p> 
-constexpr bool or_trait = or_trait<TypeList<t...>, p> || typename p<h>::value;
-
-
 template<typename List, template<typename T> class Predictor> 
 constexpr bool Any = = or_trait<List, Predictor>;
 
