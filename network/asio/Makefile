@@ -1,5 +1,5 @@
 cxx=g++
-cflag=-g -Wall -std=c++17 -lboost_system -lboost_thread
+cflag=-g -Wall -std=c++17 -lboost_system -lboost_thread -lpthread
 source=${wildcard *.cpp}
 target=${patsubst %.cpp, %, ${source}}
 .PHONY:all clean
