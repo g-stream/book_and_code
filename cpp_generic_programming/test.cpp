@@ -84,5 +84,7 @@ int main(){
     ASSERT_OK("At", (std::is_same<int, At<list, 0>>::value));
     ASSERT_OK("EraseAt", (std::is_same<TypeList<int, double>, EraseAt<list,1>>::value));
 
-    
+    ASSERT_OK("is_same_trait", is_same_curry_trait<int>::value<int>);
+  //  std::cout << typeid(Head<Filter<TypeList<int, double>, is_same_curry_trait<int> > >).name();
+
 }

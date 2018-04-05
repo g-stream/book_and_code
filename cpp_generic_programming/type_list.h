@@ -209,5 +209,30 @@ struct erase_trait<List, 0, acc>{
 template<typename List, unsigned int index> 
 using EraseAt = typename erase_trait<List, index, TypeList<>>::type;
 
-
+template<typename T>
+struct is_same_curry_trait{
+    template<typename U> 
+    static const bool value = std::is_same<T, U>::value;
+};
+/*
+ template<typename List, typename Tmp, typename Acc,bool check, typename Q>
+ struct filter_trait;
+ template<typename h, typename ... t, typename Tmp, typename Acc, typename Q> 
+ struct filter_trait<TypeList<h,t...>, Tmp, Acc, false,  Q>{
+     using type = typename filter_trait<TypeList<t...>, TypeList<h>, Acc, typename Q::value<h> , Q >::type;
+ };
+ template<typename h, typename ... t, typename Tmp, typename Acc, typename Q> 
+ struct filter_trait<TypeList<h,t...>, Tmp, Acc, true, Q>{
+     using type = typename filter_trait<TypeList<t...>, TypeList<h>, Concatenate<Acc, Tmp>, template Q::value<h>::value, Q>::type;
+ };
+template<typename Tmp, typename Acc, typename Q> 
+ struct filter_trait<TypeList<>, Tmp, Acc, true, Q>{
+     using type = Concatenate<Acc, Tmp>;
+ };
+template<typename Tmp, typename Acc, typename Q> 
+ struct filter_trait<TypeList<>, Tmp, Acc, false, Q>{
+     using type = Acc;
+ };
+template<typename List, typename Q> 
+using Filter = typename filter_trait<List, TypeList<>, TypeList<>, false, Q>::type;*/
 #endif
