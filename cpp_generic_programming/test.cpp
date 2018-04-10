@@ -29,7 +29,7 @@ int Test::cnt = 0;
 Test test;
 
 #define ASSERT_OK(name, p) test.assert_ok((name), (p),__FILE__, __LINE__)
-
+#define ASSERT_TYPELIST_EQ(name, l1, l2) test.assert_ok((name), (std::is_same<l1,l2>::value), __FILE__, __LINE__)
 
 
     template<typename T> 
@@ -85,6 +85,11 @@ int main(){
     ASSERT_OK("EraseAt", (std::is_same<TypeList<int, double>, EraseAt<list,1>>::value));
 
     ASSERT_OK("is_same_trait", is_same_curry_trait<int>::value<int>);
-  //  std::cout << typeid(Head<Filter<TypeList<int, double>, is_same_curry_trait<int> > >).name();
+
+    ASSERT_OK("Filter", (std::is_same<Filter<list, std::is_integral>, TypeList<int>>::value));
+    ASSERT_OK("Filter1", (std::is_same<Filter<empty_list, std::is_integral>, empty_list>::value));
+    ASSERT_OK("Filter2", (std::is_same<Filter<TypeList<double, int>, std::is_integral>, TypeList<int>>::value));
+    ASSERT_OK("Filter3", (std::is_same<Filter<TypeList<int>, std::is_integral>, TypeList<int>>::value));
+    ASSERT_OK("Filter4", (std::is_same<Filter<TypeList<double, double>, std::is_integral>, empty_list>::value));
 
 }
